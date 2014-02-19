@@ -6,14 +6,14 @@ import requests
 from requests.structures import CaseInsensitiveDict
 
 
-class APIClient(object):
+class ByteRESTClient(object):
 
     def __init__(self, token=None, endpoint=None):
         try:
-            self.key = token or os.environ['API_CLIENT_TOKEN']
-            self.endpoint = endpoint or os.environ['API_CLIENT_ENDPOINT']
+            self.key = token or os.environ['REST_CLIENT_TOKEN']
+            self.endpoint = endpoint or os.environ['REST_CLIENT_ENDPOINT']
         except KeyError as e:
-            raise RuntimeError('Environment variable %s is not properly configured for APIClient' % e.message)
+            raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
 
         self.headers = {'Authorization': 'Token %s' % self.key}
 

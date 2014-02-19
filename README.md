@@ -1,4 +1,4 @@
-python-apiclient
+python-restclient
 ================
 
 A generic API Client
