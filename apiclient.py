@@ -17,7 +17,7 @@ class APIClient(object):
 
         self.headers = {'Authorization': 'Token %s' % self.key}
 
-    def request(self, method='get', data={}, path=""):
+    def request(self, method, path, data={}):
         url = self.endpoint + path
         request_method = getattr(requests, method)
         response = request_method(url, data=data, headers=self.headers)
@@ -25,14 +25,15 @@ class APIClient(object):
         response.raise_for_status()
         return response.json()
 
-    def get(self, *args, **kwargs):
-        return self.request(*args, method="get", **kwargs)
+    def get(self, path, *args, **kwargs):
+        return self.request("get", path, *args, **kwargs)
 
-    def post(self, *args, **kwargs):
-        return self.request(*args, method="post", **kwargs)
+    def post(self, path, *args, **kwargs):
+        return self.request("post", path, *args, **kwargs)
 
-    def put(self, *args, **kwargs):
-        return self.request(*args, method="put", **kwargs)
+    def put(self, path, *args, **kwargs):
+        return self.request("put", path, *args, **kwargs)
 
-    def patch(self, *args, **kwargs):
-        return self.request(*args, method="patch", **kwargs)
+    def patch(self, path, *args, **kwargs):
+        return self.request("patch", path, *args, **kwargs)
+

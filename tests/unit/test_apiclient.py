@@ -59,73 +59,63 @@ class TestAPIClient(TestCase):
 
     def test_apiclient_request_makes_correct_call_using_requests(self):
         client = APIClient()
-        client.request(method='get', data={"a": "b"})
-        self.mock_get.assert_called_once_with(client.endpoint, data={"a": "b"}, headers=client.headers)
+        client.request('get', '/', data={"a": "b"})
+        self.mock_get.assert_called_once_with(API_CLIENT_ENDPOINT + "/", data={"a": "b"}, headers=client.headers)
 
     def test_apiclient_request_honours_given_method_name(self):
         client = APIClient()
-        client.request('post', data={"a": "b"})
+        client.request('post', '/', data={"a": "b"})
         self.assertEqual(self.mock_get.call_count, 0)  # get is not called, because post is requested
-        self.mock_post.assert_called_once_with(API_CLIENT_ENDPOINT, data={"a": "b"}, headers=client.headers)
+        self.mock_post.assert_called_once_with(API_CLIENT_ENDPOINT + "/", data={"a": "b"}, headers=client.headers)
 
-    def test_apiclient_request_defaults_method_to_get(self):
+    def test_apiclient_appends_path_to_url(self):
         client = APIClient()
-        client.request(data={"a": "b"})
-        self.mock_get.assert_called_once_with(API_CLIENT_ENDPOINT, data={"a": "b"}, headers=client.headers)
-
-    def test_apiclient_request_defaults_url_to_url_attribute(self):
-        client = APIClient()
-        client.request(data={"a": "b"})
-        self.mock_get.assert_called_once_with(API_CLIENT_ENDPOINT, data={"a": "b"}, headers=client.headers)
-
-    def test_apiclient_appends_urlsuffix_argument_to_url(self):
-        client = APIClient()
-        client.request(path='/varnish/v2/config/henkslaaf.nl')
+        client.request('get', '/varnish/v2/config/henkslaaf.nl')
         self.mock_get.assert_called_once_with(API_CLIENT_ENDPOINT + "/varnish/v2/config/henkslaaf.nl", data={}, headers=client.headers)
 
     def test_apiclient_request_returns_decoded_json_response(self):
         client = APIClient()
-        ret = client.request(data={"a": "b"})
+        ret = client.request('get', '/get/', data={"a": "b"})
         self.assertEqual(ret, {"b": "a"})
 
     def test_apiclient_raises_RuntimeError_when_response_is_not_200_or_201(self):
         self.mock_response.raise_for_status.side_effect = HTTPError
         client = APIClient()
         with self.assertRaises(HTTPError):
-            client.request(data={"a": "b"})
+            client.request('get', '/get/', data={"a": "b"})
 
     def test_apiclient_has_get_shortcut(self):
         client = APIClient()
         client.request = mock.MagicMock(return_value=42)
 
-        ret = client.get()
+        ret = client.get("/get/")
 
-        client.request.assert_called_once_with(method='get')
+        client.request.assert_called_once_with('get', "/get/")
         self.assertEqual(ret, 42)  # returned client.request return value
 
     def test_apiclient_has_post_shortcut(self):
         client = APIClient()
         client.request = mock.MagicMock(return_value=42)
 
-        ret = client.post()
+        ret = client.post("/post/", data={"a": 1, "b": 2})
 
-        client.request.assert_called_once_with(method='post')
+        client.request.assert_called_once_with('post', "/post/", data={"a": 1, "b": 2})
         self.assertEqual(ret, 42)  # returned client.request return value
 
     def test_apiclient_has_put_shortcut(self):
         client = APIClient()
         client.request = mock.MagicMock(return_value=42)
 
-        ret = client.put()
+        ret = client.put("/put/")
 
-        client.request.assert_called_once_with(method='put')
+        client.request.assert_called_once_with('put', "/put/")
         self.assertEqual(ret, 42)  # returned client.request return value
 
     def test_apiclient_has_patch_shortcut(self):
         client = APIClient()
         client.request = mock.MagicMock(return_value=42)
 
-        ret = client.patch()
+        ret = client.patch("/patch/")
 
-        client.request.assert_called_once_with(method='patch')
+        client.request.assert_called_once_with('patch', "/patch/")
         self.assertEqual(ret, 42)  # returned client.request return value
