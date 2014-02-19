@@ -1,4 +1,4 @@
-import os
+import json
 from unittest import TestCase
 from requests import HTTPError
 import mock
@@ -52,23 +52,24 @@ class TestByteRESTClient(TestCase):
         client = ByteRESTClient()
         self.assertEqual(client.headers, {
             'Authorization': 'Token %s' % client.key,
+            'Content-Type': 'application/json'
         })
 
     def test_restclient_request_makes_correct_call_using_requests(self):
         client = ByteRESTClient()
         client.request('get', '/', data={"a": "b"})
-        self.mock_get.assert_called_once_with(REST_CLIENT_ENDPOINT + "/", data={"a": "b"}, headers=client.headers)
+        self.mock_get.assert_called_once_with(REST_CLIENT_ENDPOINT + "/", data=json.dumps({"a": "b"}), headers=client.headers)
 
     def test_restclient_request_honours_given_method_name(self):
         client = ByteRESTClient()
         client.request('post', '/', data={"a": "b"})
         self.assertEqual(self.mock_get.call_count, 0)  # get is not called, because post is requested
-        self.mock_post.assert_called_once_with(REST_CLIENT_ENDPOINT + "/", data={"a": "b"}, headers=client.headers)
+        self.mock_post.assert_called_once_with(REST_CLIENT_ENDPOINT + "/", data=json.dumps({"a": "b"}), headers=client.headers)
 
     def test_restclient_appends_path_to_url(self):
         client = ByteRESTClient()
         client.request('get', '/varnish/v2/config/henkslaaf.nl')
-        self.mock_get.assert_called_once_with(REST_CLIENT_ENDPOINT + "/varnish/v2/config/henkslaaf.nl", data={}, headers=client.headers)
+        self.mock_get.assert_called_once_with(REST_CLIENT_ENDPOINT + "/varnish/v2/config/henkslaaf.nl", data='{}', headers=client.headers)
 
     def test_restclient_request_returns_decoded_json_response(self):
         client = ByteRESTClient()

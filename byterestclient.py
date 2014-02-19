@@ -1,9 +1,9 @@
 """
 Speak to an API
 """
+import json
 import os
 import requests
-from requests.structures import CaseInsensitiveDict
 
 
 class ByteRESTClient(object):
@@ -15,12 +15,15 @@ class ByteRESTClient(object):
         except KeyError as e:
             raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
 
-        self.headers = {'Authorization': 'Token %s' % self.key}
+        self.headers = {
+            'Authorization': 'Token %s' % self.key,
+            'Content-Type': 'application/json',
+        }
 
     def request(self, method, path, data={}):
         url = self.endpoint + path
         request_method = getattr(requests, method)
-        response = request_method(url, data=data, headers=self.headers)
+        response = request_method(url, data=json.dumps(data), headers=self.headers)
 
         response.raise_for_status()
         return response.json()
