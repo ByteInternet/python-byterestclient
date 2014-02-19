@@ -117,3 +117,12 @@ class TestByteRESTClient(TestCase):
 
         client.request.assert_called_once_with('patch', "/patch/")
         self.assertEqual(ret, 42)  # returned client.request return value
+
+    def test_restclient_has_delete_shortcut(self):
+        client = ByteRESTClient()
+        client.request = mock.MagicMock(return_value=42)
+
+        ret = client.delete("/delete/")
+
+        client.request.assert_called_once_with('delete', "/delete/")
+        self.assertEqual(ret, 42)  # returned client.request return value

@@ -37,6 +37,9 @@ class ByteRESTClient(object):
     def put(self, path, *args, **kwargs):
         return self.request("put", path, *args, **kwargs)
 
+    def delete(self, path, *args, **kwargs):
+        return self.request("delete", path, *args, **kwargs)
+
     def patch(self, path, *args, **kwargs):
         return self.request("patch", path, *args, **kwargs)
 
