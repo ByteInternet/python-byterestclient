@@ -126,3 +126,21 @@ class TestByteRESTClient(TestCase):
 
         client.request.assert_called_once_with('delete', "/delete/")
         self.assertEqual(ret, 42)  # returned client.request return value
+
+    def test_restclient_corrects_double_slashes_in_urls(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api/")
+        client.headers = {}
+        mock_get = self._set_up_patch('requests.get')
+
+        client.get("/hypernode/")
+
+        mock_get.assert_called_once_with("http://henk.nl/api/hypernode/", data='{}', headers={})
+
+    def test_restclient_corrects_missing_slashes_in_urls(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api")
+        client.headers = {}
+        mock_get = self._set_up_patch('requests.get')
+
+        client.get("hypernode/")
+
+        mock_get.assert_called_once_with("http://henk.nl/api/hypernode/", data='{}', headers={})

@@ -21,7 +21,7 @@ class ByteRESTClient(object):
         }
 
     def request(self, method, path, data={}):
-        url = self.endpoint + path
+        url = self.endpoint.rstrip('/') + '/' + path.lstrip('/')
         request_method = getattr(requests, method)
         response = request_method(url, data=json.dumps(data), headers=self.headers)
 
