@@ -15,13 +15,17 @@ class ByteRESTClient(object):
         except KeyError as e:
             raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
 
+        ## ensure slash in request stage
+        self.endpoint = self.endpoint.rstrip('/')
+
         self.headers = {
             'Authorization': 'Token %s' % self.key,
             'Content-Type': 'application/json',
         }
 
     def request(self, method, path, data={}):
-        url = self.endpoint + path
+        path = path.lstrip('/')
+        url = '/'.join((self.endpoint,path))
         request_method = getattr(requests, method)
         response = request_method(url, data=json.dumps(data), headers=self.headers)
 
