@@ -26,6 +26,10 @@ class ByteRESTClient(object):
         response = request_method(url, data=json.dumps(data), headers=self.headers)
 
         response.raise_for_status()
+
+        if response.status_code == 204:
+            return None
+
         return response.json()
 
     def get(self, path, *args, **kwargs):
