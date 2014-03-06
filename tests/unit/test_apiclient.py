@@ -76,11 +76,17 @@ class TestByteRESTClient(TestCase):
         ret = client.request('get', '/get/', data={"a": "b"})
         self.assertEqual(ret, {"b": "a"})
 
-    def test_restclient_raises_RuntimeError_when_response_is_not_200_or_201(self):
+    def test_restclient_raises_RuntimeError_when_response_is_not_in_200_range(self):
         self.mock_response.raise_for_status.side_effect = HTTPError
         client = ByteRESTClient()
         with self.assertRaises(HTTPError):
             client.request('get', '/get/', data={"a": "b"})
+
+    def test_restclient_returns_none_when_status_is_204(self):
+        self.mock_response.status_code = 204
+        client = ByteRESTClient()
+        ret = client.request('get', '/get/', data={"a": "b"})
+        self.assertIsNone(ret)
 
     def test_restclient_has_get_shortcut(self):
         client = ByteRESTClient()
