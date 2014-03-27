@@ -30,7 +30,10 @@ class ByteRESTClient(object):
         if response.status_code == 204:
             return None
 
-        return response.json()
+        if hasattr(response.json, "__call__"):
+            return response.json()
+        else:
+            return response.json
 
     def get(self, path, *args, **kwargs):
         return self.request("get", path, *args, **kwargs)
