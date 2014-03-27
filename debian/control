@@ -11,6 +11,6 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  ${python:Depends},
- python-requests (>= 2.2.1)
+ python-requests (>= 0.12.1)
 Description: Python module that facilitates making REST calls
  Python software and assorted utilities.
