@@ -5,6 +5,8 @@ import json
 import os
 import requests
 
+HTTPError = requests.HTTPError  # introspection
+
 
 class ByteRESTClient(object):
 
