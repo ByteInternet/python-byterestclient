@@ -22,10 +22,10 @@ class ByteRESTClient(object):
             'Content-Type': 'application/json',
         }
 
-    def request(self, method, path, data={}):
+    def request(self, method, path, data=None, *args, **kwargs):
         url = self.endpoint.rstrip('/') + '/' + path.lstrip('/')
         request_method = getattr(requests, method)
-        response = request_method(url, data=json.dumps(data), headers=self.headers)
+        response = request_method(url, data=json.dumps(data or {}), headers=self.headers, *args, **kwargs)
 
         response.raise_for_status()
 
