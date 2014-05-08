@@ -150,3 +150,12 @@ class TestByteRESTClient(TestCase):
         client.get("hypernode/")
 
         mock_get.assert_called_once_with("http://henk.nl/api/hypernode/", data='{}', headers={})
+
+    def test_restclient_passes_extra_parameters_to_requests(self):
+        client = ByteRESTClient(endpoint='http://henk.nl/api')
+        client.headers = {}
+        mock_get = self._set_up_patch('requests.get')
+
+        client.get('hypernode', params={"q": "mynode"})
+
+        mock_get.assert_called_once_with("http://henk.nl/api/hypernode", headers={}, params={"q": "mynode"}, data='{}')
