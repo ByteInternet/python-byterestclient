@@ -1,0 +1,16 @@
+Source: python-byterestclient
+Maintainer: Allard Hoeve <allard@byte.nl>
+Section: python
+Priority: optional
+Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 9), python, python-mock, python-nose, python-requests (>= 0.12.1)
+
+Package: python-byterestclient
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ python-requests (>= 0.12.1)
+Description: Python module that facilitates making REST calls
+ Python software and assorted utilities.

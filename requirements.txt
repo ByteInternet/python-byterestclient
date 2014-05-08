@@ -1,1 +1,1 @@
-requests>=0.12.1
+requests>=0.12.1  # debian wheezy has 0.12.1
