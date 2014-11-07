@@ -38,7 +38,7 @@ class ByteRESTClient(object):
             return response.json
 
     def get_absolute_url(self, path):
-        return "%s/%s" % (self.endpoint.rstrip('/'), path.lstrip('/'))
+        return self.endpoint.rstrip('/') + '/' + path.lstrip('/')
 
     def get(self, path, *args, **kwargs):
         return self.request("get", path, *args, **kwargs)
