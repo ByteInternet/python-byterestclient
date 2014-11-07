@@ -23,7 +23,7 @@ class ByteRESTClient(object):
         }
 
     def request(self, method, path, data=None, *args, **kwargs):
-        url = self.endpoint.rstrip('/') + '/' + path.lstrip('/')
+        url = self.get_absolute_url(path)
         request_method = getattr(requests, method)
         response = request_method(url, data=json.dumps(data or {}), headers=self.headers, *args, **kwargs)
 
@@ -36,6 +36,9 @@ class ByteRESTClient(object):
             return response.json()
         else:
             return response.json
+
+    def get_absolute_url(self, path):
+        return "%s/%s" % (self.endpoint.rstrip('/'), path.lstrip('/'))
 
     def get(self, path, *args, **kwargs):
         return self.request("get", path, *args, **kwargs)
@@ -51,4 +54,3 @@ class ByteRESTClient(object):
 
     def patch(self, path, *args, **kwargs):
         return self.request("patch", path, *args, **kwargs)
-
