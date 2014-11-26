@@ -159,3 +159,23 @@ class TestByteRESTClient(TestCase):
         client.get('hypernode', params={"q": "mynode"})
 
         mock_get.assert_called_once_with("http://henk.nl/api/hypernode", headers={}, params={"q": "mynode"}, data='{}')
+
+    def test_that_get_absolute_url_concatenates_a_path_to_the_endpoint(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api/")
+        absolute_url = client.get_absolute_url("foo/bar")
+        self.assertEqual(absolute_url, "http://henk.nl/api/foo/bar")
+
+    def test_that_get_absolute_url_adds_a_slash_between_endpoint_and_path(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api")
+        absolute_url = client.get_absolute_url("foo/bar")
+        self.assertEqual(absolute_url, "http://henk.nl/api/foo/bar")
+
+    def test_that_get_absolute_url_removes_double_slashes_between_endpoint_and_path(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api/")
+        absolute_url = client.get_absolute_url("/foo/bar")
+        self.assertEqual(absolute_url, "http://henk.nl/api/foo/bar")
+
+    def test_that_get_absolute_url_accepts_empty_paths(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api/")
+        absolute_url = client.get_absolute_url("")
+        self.assertEqual(absolute_url, "http://henk.nl/api/")
