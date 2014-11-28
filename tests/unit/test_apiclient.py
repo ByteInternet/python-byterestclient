@@ -179,3 +179,8 @@ class TestByteRESTClient(TestCase):
         client = ByteRESTClient(endpoint="http://henk.nl/api/")
         absolute_url = client.get_absolute_url("")
         self.assertEqual(absolute_url, "http://henk.nl/api/")
+
+    def test_that_get_absolute_url_does_not_alter_absolute_urls(self):
+        client = ByteRESTClient(endpoint="http://henk.nl/api/")
+        absolute_url = client.get_absolute_url("http://henk.nl/api/foo/bar")
+        self.assertEqual(absolute_url, "http://henk.nl/api/foo/bar")
