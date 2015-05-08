@@ -35,7 +35,7 @@ class ByteRESTClient(object):
             **kwargs
         )
 
-        response.raise_for_status()
+        response.raise_for_status(allow_redirects=False)
 
         if response.status_code == 204:
             return None

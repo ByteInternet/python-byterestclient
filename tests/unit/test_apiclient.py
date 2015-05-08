@@ -1,6 +1,6 @@
 import json
 from unittest import TestCase
-from requests import HTTPError
+from requests import HTTPError, Response
 import mock
 from byterestclient import ByteRESTClient
 
@@ -24,10 +24,9 @@ class TestByteRESTClient(TestCase):
         self.mock_get = self._set_up_patch('requests.get')
         self.mock_post = self._set_up_patch('requests.post')
 
-        self.mock_response = mock.MagicMock()
+        self.mock_response = Response()
         self.mock_response.status_code = 200
-        self.mock_response.content.return_value = '{"b": "a"}'
-        self.mock_response.json.return_value = {"b": "a"}
+        self.mock_response._content = '{"b": "a"}'
 
         self.mock_get.return_value = self.mock_response
         self.mock_post.return_value = self.mock_response
@@ -91,8 +90,14 @@ class TestByteRESTClient(TestCase):
         ret = client.request('get', '/get/', data={"a": "b"})
         self.assertEqual(ret, {"b": "a"})
 
-    def test_restclient_raises_RuntimeError_when_response_is_not_in_200_range(self):
-        self.mock_response.raise_for_status.side_effect = HTTPError
+    def test_restclient_raises_HTTPError_when_request_is_not_successful(self):
+        self.mock_response.status_code = 404
+        client = ByteRESTClient()
+        with self.assertRaises(HTTPError):
+            client.request('get', '/get/', data={"a": "b"})
+
+    def test_restclient_raises_HTTPError_when_request_is_redirect(self):
+        self.mock_response.status_code = 302
         client = ByteRESTClient()
         with self.assertRaises(HTTPError):
             client.request('get', '/get/', data={"a": "b"})
