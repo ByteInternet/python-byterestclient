@@ -25,7 +25,15 @@ class ByteRESTClient(object):
     def request(self, method, path, data=None, *args, **kwargs):
         url = self.get_absolute_url(path)
         request_method = getattr(requests, method)
-        response = request_method(url, data=json.dumps(data or {}), headers=self.headers, *args, **kwargs)
+
+        response = request_method(
+            url,
+            data=json.dumps(data or {}),
+            headers=self.headers,
+            allow_redirects=False,
+            *args,
+            **kwargs
+        )
 
         response.raise_for_status()
 
