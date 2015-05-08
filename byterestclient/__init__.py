@@ -4,6 +4,7 @@ Speak to an API
 import json
 import os
 import requests
+from urlparse import urlsplit, urlunsplit
 
 HTTPError = requests.HTTPError  # introspection
 
@@ -23,7 +24,7 @@ class ByteRESTClient(object):
         }
 
     def request(self, method, path, data=None, *args, **kwargs):
-        url = self.get_absolute_url(path)
+        url = self.format_absolute_url(path)
         request_method = getattr(requests, method)
         response = request_method(url, data=json.dumps(data or {}), headers=self.headers, *args, **kwargs)
 
@@ -37,8 +38,11 @@ class ByteRESTClient(object):
         else:
             return response.json
 
-    def get_absolute_url(self, path):
-        return self.endpoint.rstrip('/') + '/' + path.lstrip('/')
+    def format_absolute_url(self, path):
+        url = urlsplit(self.endpoint)
+        total_path = '/'.join([p.lstrip('/') for p in [url.path, path]])
+        clean_path = total_path.replace('//', '/')
+        return urlunsplit([url.scheme, url.netloc, clean_path, url.query, url.fragment])
 
     def get(self, path, *args, **kwargs):
         return self.request("get", path, *args, **kwargs)
