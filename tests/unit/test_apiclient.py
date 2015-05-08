@@ -12,11 +12,11 @@ REST_CLIENT_ENDPOINT = 'http://example.com/api'
 @mock.patch.dict('os.environ', {'REST_CLIENT_TOKEN': REST_CLIENT_TOKEN, 'REST_CLIENT_ENDPOINT': REST_CLIENT_ENDPOINT})
 class TestByteRESTClient(TestCase):
 
-    def _set_up_patch(self, topatch, themock=None):
-        if themock is None:
-            themock = mock.Mock()
+    def _set_up_patch(self, to_patch, the_mock=None, **kwargs):
+        if the_mock is None:
+            the_mock = mock.Mock()
 
-        patcher = mock.patch(topatch, themock)
+        patcher = mock.patch(to_patch, the_mock, **kwargs)
         self.addCleanup(patcher.stop)
         return patcher.start()
 
