@@ -24,8 +24,8 @@ class ByteRESTClient(object):
         self.headers = {
             'Authorization': 'Token %s' % self.key,
             'Content-Type': 'application/json',
-            'Originating-Hostname': socket.getfqdn(),
-            'Originating-Application': "%s/%s" % (program['dir'], program['name'])
+            'User-Agent': '%s:%s/%s' % (socket.getfqdn(),
+                                        program['dir'], program['name'])
         }
 
     def request(self, method, path, data=None, *args, **kwargs):

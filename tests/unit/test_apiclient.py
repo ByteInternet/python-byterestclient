@@ -59,8 +59,7 @@ class TestByteRESTClient(TestCase):
         self.assertEqual(client.headers, {
             'Authorization': 'Token %s' % client.key,
             'Content-Type': 'application/json',
-            'Originating-Hostname': 'myserver1.c6.internal',
-            'Originating-Application': '/tmp/myapp.py',
+            'User-Agent': 'myserver1.c6.internal:/tmp/myapp.py',
         })
 
     def test_restclient_request_makes_correct_call_using_requests(self):
