@@ -24,6 +24,12 @@ class TestByteRESTClient(TestCase):
         self.mock_get = self._set_up_patch('requests.get')
         self.mock_post = self._set_up_patch('requests.post')
 
+        self.mock_get_fqdn = self._set_up_patch('socket.getfqdn')
+        self.mock_get_fqdn.return_value = 'myserver1.c6.internal'
+
+        self.mock_scriptinfo = self._set_up_patch('byterestclient.scriptinfo')
+        self.mock_scriptinfo.return_value = {'dir': '/tmp', 'name': 'myapp.py'}
+
         self.mock_response = mock.MagicMock()
         self.mock_response.status_code = 200
         self.mock_response.content.return_value = '{"b": "a"}'
@@ -52,7 +58,9 @@ class TestByteRESTClient(TestCase):
         client = ByteRESTClient()
         self.assertEqual(client.headers, {
             'Authorization': 'Token %s' % client.key,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Originating-Hostname': 'myserver1.c6.internal',
+            'Originating-Application': '/tmp/myapp.py',
         })
 
     def test_restclient_request_makes_correct_call_using_requests(self):

@@ -4,6 +4,8 @@ Speak to an API
 import json
 import os
 import requests
+import socket
+from byterestclient.scriptinfo import scriptinfo
 
 HTTPError = requests.HTTPError  # introspection
 
@@ -17,9 +19,13 @@ class ByteRESTClient(object):
         except KeyError as e:
             raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
 
+        program = scriptinfo()
+
         self.headers = {
             'Authorization': 'Token %s' % self.key,
             'Content-Type': 'application/json',
+            'Originating-Hostname': socket.getfqdn(),
+            'Originating-Application': "%s/%s" % (program['dir'], program['name'])
         }
 
     def request(self, method, path, data=None, *args, **kwargs):
