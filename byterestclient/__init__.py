@@ -16,7 +16,7 @@ class ByteRESTClient(object):
             self.key = token or os.environ['REST_CLIENT_TOKEN']
             self.endpoint = endpoint or os.environ['REST_CLIENT_ENDPOINT']
         except KeyError as e:
-            raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
+            raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e)
 
         self.headers = {
             'Authorization': 'Token %s' % self.key,
@@ -27,9 +27,17 @@ class ByteRESTClient(object):
     def request(self, method, path, data=None, *args, **kwargs):
         url = self.get_absolute_url(path)
         request_method = getattr(requests, method)
-        response = request_method(url, data=json.dumps(data or {}), headers=self.headers, *args, **kwargs)
 
-        response.raise_for_status()
+        response = request_method(
+            url,
+            data=json.dumps(data or {}),
+            headers=self.headers,
+            allow_redirects=False,
+            *args,
+            **kwargs
+        )
+
+        response.raise_for_status(allow_redirects=False)
 
         if response.status_code == 204:
             return None

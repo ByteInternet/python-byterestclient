@@ -1,6 +1,6 @@
 import json
 from unittest import TestCase
-from requests import HTTPError
+from requests import HTTPError, Response
 import mock
 from byterestclient import ByteRESTClient
 
@@ -12,11 +12,11 @@ REST_CLIENT_ENDPOINT = 'http://example.com/api'
 @mock.patch.dict('os.environ', {'REST_CLIENT_TOKEN': REST_CLIENT_TOKEN, 'REST_CLIENT_ENDPOINT': REST_CLIENT_ENDPOINT})
 class TestByteRESTClient(TestCase):
 
-    def _set_up_patch(self, topatch, themock=None):
-        if themock is None:
-            themock = mock.Mock()
+    def _set_up_patch(self, to_patch, the_mock=None, **kwargs):
+        if the_mock is None:
+            the_mock = mock.Mock()
 
-        patcher = mock.patch(topatch, themock)
+        patcher = mock.patch(to_patch, the_mock, **kwargs)
         self.addCleanup(patcher.stop)
         return patcher.start()
 
@@ -27,10 +27,9 @@ class TestByteRESTClient(TestCase):
         self.mock_get_fqdn = self._set_up_patch('socket.getfqdn')
         self.mock_get_fqdn.return_value = 'myserver1.c6.internal'
 
-        self.mock_response = mock.MagicMock()
+        self.mock_response = Response()
         self.mock_response.status_code = 200
-        self.mock_response.content.return_value = '{"b": "a"}'
-        self.mock_response.json.return_value = {"b": "a"}
+        self.mock_response._content = '{"b": "a"}'
 
         self.mock_get.return_value = self.mock_response
         self.mock_post.return_value = self.mock_response
@@ -70,26 +69,47 @@ class TestByteRESTClient(TestCase):
     def test_restclient_request_makes_correct_call_using_requests(self):
         client = ByteRESTClient()
         client.request('get', '/', data={"a": "b"})
-        self.mock_get.assert_called_once_with(REST_CLIENT_ENDPOINT + "/", data=json.dumps({"a": "b"}), headers=client.headers)
+        self.mock_get.assert_called_once_with(
+            REST_CLIENT_ENDPOINT + "/",
+            data=json.dumps({"a": "b"}),
+            headers=client.headers,
+            allow_redirects=False
+        )
 
     def test_restclient_request_honours_given_method_name(self):
         client = ByteRESTClient()
         client.request('post', '/', data={"a": "b"})
         self.assertEqual(self.mock_get.call_count, 0)  # get is not called, because post is requested
-        self.mock_post.assert_called_once_with(REST_CLIENT_ENDPOINT + "/", data=json.dumps({"a": "b"}), headers=client.headers)
+        self.mock_post.assert_called_once_with(
+            REST_CLIENT_ENDPOINT + "/",
+            data=json.dumps({"a": "b"}),
+            headers=client.headers,
+            allow_redirects=False
+        )
 
     def test_restclient_appends_path_to_url(self):
         client = ByteRESTClient()
         client.request('get', '/varnish/v2/config/henkslaaf.nl')
-        self.mock_get.assert_called_once_with(REST_CLIENT_ENDPOINT + "/varnish/v2/config/henkslaaf.nl", data='{}', headers=client.headers)
+        self.mock_get.assert_called_once_with(
+            REST_CLIENT_ENDPOINT + "/varnish/v2/config/henkslaaf.nl",
+            data='{}',
+            headers=client.headers,
+            allow_redirects=False
+        )
 
     def test_restclient_request_returns_decoded_json_response(self):
         client = ByteRESTClient()
         ret = client.request('get', '/get/', data={"a": "b"})
         self.assertEqual(ret, {"b": "a"})
 
-    def test_restclient_raises_RuntimeError_when_response_is_not_in_200_range(self):
-        self.mock_response.raise_for_status.side_effect = HTTPError
+    def test_restclient_raises_HTTPError_when_request_is_not_successful(self):
+        self.mock_response.status_code = 404
+        client = ByteRESTClient()
+        with self.assertRaises(HTTPError):
+            client.request('get', '/get/', data={"a": "b"})
+
+    def test_restclient_raises_HTTPError_when_request_is_redirect(self):
+        self.mock_response.status_code = 302
         client = ByteRESTClient()
         with self.assertRaises(HTTPError):
             client.request('get', '/get/', data={"a": "b"})
@@ -152,7 +172,12 @@ class TestByteRESTClient(TestCase):
 
         client.get("/hypernode/")
 
-        mock_get.assert_called_once_with("http://henk.nl/api/hypernode/", data='{}', headers={})
+        mock_get.assert_called_once_with(
+            "http://henk.nl/api/hypernode/",
+            data='{}',
+            headers={},
+            allow_redirects=False
+        )
 
     def test_restclient_corrects_missing_slashes_in_urls(self):
         client = ByteRESTClient(endpoint="http://henk.nl/api")
@@ -161,7 +186,12 @@ class TestByteRESTClient(TestCase):
 
         client.get("hypernode/")
 
-        mock_get.assert_called_once_with("http://henk.nl/api/hypernode/", data='{}', headers={})
+        mock_get.assert_called_once_with(
+            "http://henk.nl/api/hypernode/",
+            data='{}',
+            headers={},
+            allow_redirects=False
+        )
 
     def test_restclient_passes_extra_parameters_to_requests(self):
         client = ByteRESTClient(endpoint='http://henk.nl/api')
@@ -170,7 +200,13 @@ class TestByteRESTClient(TestCase):
 
         client.get('hypernode', params={"q": "mynode"})
 
-        mock_get.assert_called_once_with("http://henk.nl/api/hypernode", headers={}, params={"q": "mynode"}, data='{}')
+        mock_get.assert_called_once_with(
+            "http://henk.nl/api/hypernode",
+            headers={},
+            params={"q": "mynode"},
+            data='{}',
+            allow_redirects=False
+        )
 
     def test_that_get_absolute_url_concatenates_a_path_to_the_endpoint(self):
         client = ByteRESTClient(endpoint="http://henk.nl/api/")
