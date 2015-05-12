@@ -184,3 +184,8 @@ class TestByteRESTClient(TestCase):
         client = ByteRESTClient(endpoint="http://henk.nl/api/")
         absolute_url = client.format_absolute_url("")
         self.assertEqual(absolute_url, "http://henk.nl/api/")
+
+    def test_that_get_absolute_url_works_correctly_if_path_has_query_params_and_fragments(self):
+        client = ByteRESTClient(endpoint="http://henk:pass@aap.nl:8080/mies/")
+        absolute_url = client.format_absolute_url("/henk;zus?aap=noot#noot")
+        self.assertEqual(absolute_url, "http://henk:pass@aap.nl:8080/mies/henk;zus?aap=noot#noot")
