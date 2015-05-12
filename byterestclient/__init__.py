@@ -15,7 +15,7 @@ class ByteRESTClient(object):
             self.key = token or os.environ['REST_CLIENT_TOKEN']
             self.endpoint = endpoint or os.environ['REST_CLIENT_ENDPOINT']
         except KeyError as e:
-            raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
+            raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e)
 
         self.headers = {
             'Authorization': 'Token %s' % self.key,
