@@ -3,6 +3,7 @@ Speak to an API
 """
 import json
 import os
+import re
 import requests
 from urlparse import urlsplit, urlunsplit
 
@@ -39,10 +40,12 @@ class ByteRESTClient(object):
             return response.json
 
     def format_absolute_url(self, path):
-        url = urlsplit(self.endpoint)
-        total_path = '/'.join([p.lstrip('/') for p in [url.path, path]])
-        clean_path = total_path.replace('//', '/')
-        return urlunsplit([url.scheme, url.netloc, clean_path, url.query, url.fragment])
+        def join_and_clean_paths(path1, path2):
+            return re.sub(r'/+', '/', path1 + '/' + path2)
+
+        urlparts = list(urlsplit(self.endpoint)) # cast to list, because resulting tuple is immutable
+        urlparts[2] = join_and_clean_paths(urlparts[2], path)
+        return urlunsplit(urlparts)
 
     def get(self, path, *args, **kwargs):
         return self.request("get", path, *args, **kwargs)
