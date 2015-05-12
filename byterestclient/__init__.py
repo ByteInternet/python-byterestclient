@@ -43,7 +43,7 @@ class ByteRESTClient(object):
         def join_and_clean_paths(path1, path2):
             return re.sub(r'/+', '/', path1 + '/' + path2)
 
-        urlparts = list(urlsplit(self.endpoint)) # cast to list, because resulting tuple is immutable
+        urlparts = list(urlsplit(self.endpoint))  # cast to list, because resulting tuple is immutable
         urlparts[2] = join_and_clean_paths(urlparts[2], path)
         return urlunsplit(urlparts)
 
