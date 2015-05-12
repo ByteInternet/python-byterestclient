@@ -37,12 +37,19 @@ class ByteRESTClient(object):
             **kwargs
         )
 
-        response.raise_for_status(allow_redirects=False)
+        response.raise_for_status()
+
+        if 300 <= response.status_code < 400:
+            # support 0.12.1 by setting response seperately
+            exception = HTTPError('%s Encountered Redirect' % response.status_code)
+            exception.response = response
+            raise exception
 
         if response.status_code == 204:
             return None
 
-        if hasattr(response.json, "__call__"):
+        # support 0.12.1 that has json as property, newer requests has json as method
+        if callable(response.json):
             return response.json()
         else:
             return response.json
