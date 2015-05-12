@@ -5,27 +5,23 @@ import json
 import os
 import requests
 import socket
-from byterestclient.scriptinfo import scriptinfo
 
 HTTPError = requests.HTTPError  # introspection
 
 
 class ByteRESTClient(object):
 
-    def __init__(self, token=None, endpoint=None):
+    def __init__(self, token=None, endpoint=None, identifier='byterestclient'):
         try:
             self.key = token or os.environ['REST_CLIENT_TOKEN']
             self.endpoint = endpoint or os.environ['REST_CLIENT_ENDPOINT']
         except KeyError as e:
             raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e.message)
 
-        program = scriptinfo()
-
         self.headers = {
             'Authorization': 'Token %s' % self.key,
             'Content-Type': 'application/json',
-            'User-Agent': '%s:%s/%s' % (socket.getfqdn(),
-                                        program['dir'], program['name'])
+            'User-Agent': '%s:%s' % (socket.getfqdn(), identifier)
         }
 
     def request(self, method, path, data=None, *args, **kwargs):
