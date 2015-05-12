@@ -3,7 +3,9 @@ Speak to an API
 """
 import json
 import os
+import re
 import requests
+from urlparse import urlsplit, urlunsplit
 import socket
 
 HTTPError = requests.HTTPError  # introspection
@@ -25,7 +27,7 @@ class ByteRESTClient(object):
         }
 
     def request(self, method, path, data=None, *args, **kwargs):
-        url = self.get_absolute_url(path)
+        url = self.format_absolute_url(path)
         request_method = getattr(requests, method)
 
         response = request_method(
@@ -54,8 +56,13 @@ class ByteRESTClient(object):
         else:
             return response.json
 
-    def get_absolute_url(self, path):
-        return self.endpoint.rstrip('/') + '/' + path.lstrip('/')
+    def format_absolute_url(self, path):
+        def join_and_clean_paths(path1, path2):
+            return re.sub(r'/+', '/', path1 + '/' + path2)
+
+        urlparts = list(urlsplit(self.endpoint))  # cast to list, because resulting tuple is immutable
+        urlparts[2] = join_and_clean_paths(urlparts[2], path)
+        return urlunsplit(urlparts)
 
     def get(self, path, *args, **kwargs):
         return self.request("get", path, *args, **kwargs)
