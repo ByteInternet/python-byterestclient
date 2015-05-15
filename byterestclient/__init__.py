@@ -9,6 +9,7 @@ from urlparse import urlsplit, urlunsplit
 import socket
 
 HTTPError = requests.HTTPError  # introspection
+ConnectionError = requests.ConnectionError
 
 
 class ByteRESTClient(object):
