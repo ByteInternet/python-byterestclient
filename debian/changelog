@@ -1,5 +1,56 @@
-python-byterestclient (20140327.1) UNRELEASED; urgency=low
+python-byterestclient (20150519.1055) utopic; urgency=low
 
+  [ Allard Hoeve ]
   * Initial release.
+  * Run tests on building for debian
+  * Support requests 0.12.1 that has @property json
+  * Provide an HTTPError import (Demeter)
+  * Update version
 
- -- Allard Hoeve <allard@byte.nl>  Thu, 27 Mar 2014 15:19:46 +0100
+  [ Maarten van Schaik ]
+  * Pass any extra params to requests
+  * Eliminate mutable default param
+  * Add testing requirements to requirement.txt
+  * Bump version number
+
+  [ Bram Stoeller ]
+  * get_absolute_url()
+  * get_absolute_url()
+  * tests for get_absolute_url()
+
+  [ Allard Hoeve ]
+  * Modernize set_up_patch
+  * Disallow redirects
+  * Raise exception when redirect encountered
+
+  [ Sophia Davis ]
+  * Correct double slashes within the path as well
+
+  [ Rik van Achterberg ]
+  * Don't use exception.message, it's been deprecated - just cast to string
+
+  [ secondhans ]
+  * add Originating-Hostname and Originating-Application to headers
+  * put both fqdn and calling program in the User-Agent header field
+
+  [ Sophia Davis ]
+  * Test that get_absolute_url manages query params and fragments
+  * Clean up format_absolute_url
+
+  [ Allard Hoeve ]
+  * Properly test older and newer versions
+  * Support newer versions of requests
+  * Add tox to the requirements file
+
+  [ secondhans ]
+  * replace scriptinfo stuff and use configurable identifier in useragent
+
+  [ Sophia Davis ]
+  * Add two spaces before inline comment to appease pep8
+  * Fix test names
+  * Import ConnectionError so that ENC doesn't have to require requests
+  * Add buildme
+
+  [ Sophia ]
+
+ -- Sophia <sophia@sophia>  Tue, 19 May 2015 10:55:24 +0200
