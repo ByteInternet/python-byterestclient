@@ -28,6 +28,7 @@ class TestByteRESTClient(TestCase):
         self.mock_get_fqdn.return_value = 'myserver1.c6.internal'
 
         self.mock_response = Response()
+        self.mock_response.encoding = "utf8"
         self.mock_response.status_code = 200
         self.mock_response._content = '{"b": "a"}'
 
