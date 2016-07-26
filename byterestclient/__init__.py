@@ -24,6 +24,7 @@ class ByteRESTClient(object):
         self.headers = {
             'Authorization': 'Token %s' % self.key,
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'User-Agent': '%s:%s' % (socket.getfqdn(), identifier)
         }
 

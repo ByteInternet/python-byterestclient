@@ -56,6 +56,7 @@ class TestByteRESTClient(TestCase):
         self.assertEqual(client.headers, {
             'Authorization': 'Token %s' % client.key,
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'User-Agent': 'myserver1.c6.internal:byterestclient',
         })
 
@@ -64,6 +65,7 @@ class TestByteRESTClient(TestCase):
         self.assertEqual(client.headers, {
             'Authorization': 'Token %s' % client.key,
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'User-Agent': 'myserver1.c6.internal:monkey',
         })
 
