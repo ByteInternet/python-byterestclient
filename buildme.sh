@@ -20,4 +20,8 @@ git push --tags
 echo Building package
 git-buildpackage --git-pbuilder --git-dist=wheezy --git-arch=amd64 --git-ignore-branch
 
+# build for pypi
+python setup.py sdist bdist_wheel
+
 echo -e "Now to dput run:\ndput --unchecked -c /etc/byte.cf wheezy ../CHANGESFILE"
+echo -e "Or to upload to PyPI run:\ntwine upload -r pypi dist/*"
