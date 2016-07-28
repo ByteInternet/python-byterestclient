@@ -3,7 +3,7 @@ set -e
 
 echo Updating changelog
 export version=$(date "+%Y%m%d.%H%M")
-git-dch --debian-tag="%(version)s" --new-version=$version --debian-branch master --release
+gbp dch --debian-tag="%(version)s" --new-version=$version --debian-branch master --release
 
 echo Updating version in setup.py
 sed -i -- "s/version='.*'/version='$version'/" setup.py
