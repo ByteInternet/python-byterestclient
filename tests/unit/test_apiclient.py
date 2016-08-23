@@ -30,7 +30,7 @@ class TestByteRESTClient(TestCase):
         self.mock_response = Response()
         self.mock_response.encoding = "utf8"
         self.mock_response.status_code = 200
-        self.mock_response._content = '{"b": "a"}'
+        self.mock_response._content = b'{"b": "a"}'
 
         self.mock_get.return_value = self.mock_response
         self.mock_post.return_value = self.mock_response
@@ -171,11 +171,9 @@ class TestByteRESTClient(TestCase):
     def test_restclient_corrects_double_slashes_in_urls(self):
         client = ByteRESTClient(endpoint="http://henk.nl/api/")
         client.headers = {}
-        mock_get = self._set_up_patch('requests.get')
-
         client.get("/hypernode/")
 
-        mock_get.assert_called_once_with(
+        self.mock_get.assert_called_once_with(
             "http://henk.nl/api/hypernode/",
             data='{}',
             headers={},
@@ -185,11 +183,9 @@ class TestByteRESTClient(TestCase):
     def test_restclient_corrects_missing_slashes_in_urls(self):
         client = ByteRESTClient(endpoint="http://henk.nl/api")
         client.headers = {}
-        mock_get = self._set_up_patch('requests.get')
-
         client.get("hypernode/")
 
-        mock_get.assert_called_once_with(
+        self.mock_get.assert_called_once_with(
             "http://henk.nl/api/hypernode/",
             data='{}',
             headers={},
@@ -199,11 +195,9 @@ class TestByteRESTClient(TestCase):
     def test_restclient_passes_extra_parameters_to_requests(self):
         client = ByteRESTClient(endpoint='http://henk.nl/api')
         client.headers = {}
-        mock_get = self._set_up_patch('requests.get')
-
         client.get('hypernode', params={"q": "mynode"})
 
-        mock_get.assert_called_once_with(
+        self.mock_get.assert_called_once_with(
             "http://henk.nl/api/hypernode",
             headers={},
             params={"q": "mynode"},
