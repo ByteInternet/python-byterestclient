@@ -5,8 +5,13 @@ import json
 import os
 import re
 import requests
-from urlparse import urlsplit, urlunsplit
 import socket
+
+try:
+    from urllib.parse import urlsplit, urlunsplit
+except ImportError:
+    from urlparse import urlsplit, urlunsplit
+
 
 HTTPError = requests.HTTPError  # introspection
 ConnectionError = requests.ConnectionError
