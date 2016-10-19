@@ -12,7 +12,6 @@ try:
 except ImportError:
     from urlparse import urlsplit, urlunsplit
 
-
 HTTPError = requests.HTTPError  # introspection
 ConnectionError = requests.ConnectionError
 
