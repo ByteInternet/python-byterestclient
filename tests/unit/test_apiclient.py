@@ -30,7 +30,7 @@ class TestByteRESTClient(TestCase):
         self.mock_response = Response()
         self.mock_response.encoding = "utf8"
         self.mock_response.status_code = 200
-        self.mock_response._content = b'{"b": "a"}'
+        self.mock_response._content = '{"b": "a"}'.encode("utf-8")
 
         self.mock_get.return_value = self.mock_response
         self.mock_post.return_value = self.mock_response
