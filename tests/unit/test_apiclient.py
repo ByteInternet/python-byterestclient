@@ -205,6 +205,19 @@ class TestByteRESTClient(TestCase):
             allow_redirects=False
         )
 
+    def test_restclient_adds_referer_if_passed(self):
+        client = ByteRESTClient(endpoint='http://henk.nl/api')
+        client.headers = {}
+        client.get('hypernode', params={"q": "mynode"}, referer="http://ingrid.nl/consumer.html")
+
+        self.mock_get.assert_called_once_with(
+            "http://henk.nl/api/hypernode",
+            headers={"Referer": "http://ingrid.nl/consumer.html"},
+            params={"q": "mynode"},
+            data='{}',
+            allow_redirects=False
+        )
+
     def test_that_format_absolute_url_concatenates_a_path_to_the_endpoint(self):
         client = ByteRESTClient(endpoint="http://henk.nl/api/")
         absolute_url = client.format_absolute_url("foo/bar")
