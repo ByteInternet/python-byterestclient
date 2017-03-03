@@ -32,14 +32,18 @@ class ByteRESTClient(object):
             'User-Agent': '%s:%s' % (socket.getfqdn(), identifier)
         }
 
-    def request(self, method, path, data=None, *args, **kwargs):
+    def request(self, method, path, data=None, referer=None, *args, **kwargs):
         url = self.format_absolute_url(path)
         request_method = getattr(requests, method)
+        headers = self.headers.copy()
+
+        if referer:
+            headers.setdefault('Referer', referer)
 
         response = request_method(
             url,
             data=json.dumps(data or {}),
-            headers=self.headers,
+            headers=headers,
             allow_redirects=False,
             *args,
             **kwargs
