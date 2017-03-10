@@ -1,3 +1,15 @@
+python-byterestclient (20170310.1735) xenial; urgency=medium
+
+  [ Allard Hoeve ]
+  * Add Python 3.5
+
+  [ Anna Sirota ]
+  * Allow passing extra headers to the ByteRestClient
+
+  [ Anna ]
+
+ -- Anna <anna@Anna-Ubuntu-Byte>  Fri, 10 Mar 2017 17:35:40 +0100
+
 python-byterestclient (20161019.1304) trusty; urgency=medium
 
   [ Willem de Groot ]
