@@ -18,7 +18,7 @@ ConnectionError = requests.ConnectionError
 
 class ByteRESTClient(object):
 
-    def __init__(self, token=None, endpoint=None, identifier='byterestclient'):
+    def __init__(self, token=None, endpoint=None, identifier='byterestclient', headers=None):
         try:
             self.key = token or os.environ['REST_CLIENT_TOKEN']
             self.endpoint = endpoint or os.environ['REST_CLIENT_ENDPOINT']
@@ -31,6 +31,8 @@ class ByteRESTClient(object):
             'Accept': 'application/json',
             'User-Agent': '%s:%s' % (socket.getfqdn(), identifier)
         }
+        if headers:
+            self.headers.update(headers)
 
     def request(self, method, path, data=None, *args, **kwargs):
         url = self.format_absolute_url(path)
