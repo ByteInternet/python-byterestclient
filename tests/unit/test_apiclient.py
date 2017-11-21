@@ -70,6 +70,15 @@ class TestByteRESTClient(TestCase):
             'test': 'test', 'test1': 'test1',
         })
 
+    def test_restclient_has_specified_auth_type(self):
+        client = ByteRESTClient(auth_type='Bearer')
+        self.assertEqual(client.headers, {
+            'Authorization': 'Bearer %s' % client.key,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'User-Agent': 'myserver1.c6.internal:byterestclient',
+        })
+
     def test_restclient_accepts_identifier_and_adds_it_to_useragent_header(self):
         client = ByteRESTClient(identifier='monkey')
         self.assertEqual(client.headers, {
