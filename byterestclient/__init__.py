@@ -18,7 +18,7 @@ ConnectionError = requests.ConnectionError
 
 class ByteRESTClient(object):
 
-    def __init__(self, token=None, endpoint=None, identifier='byterestclient', headers=None):
+    def __init__(self, token=None, endpoint=None, identifier='byterestclient', headers=None, auth_type='Token'):
         try:
             self.key = token or os.environ['REST_CLIENT_TOKEN']
             self.endpoint = endpoint or os.environ['REST_CLIENT_ENDPOINT']
@@ -26,7 +26,7 @@ class ByteRESTClient(object):
             raise RuntimeError('Environment variable %s is not properly configured for ByteRESTClient' % e)
 
         self.headers = {
-            'Authorization': 'Token %s' % self.key,
+            'Authorization': '%s %s' % (auth_type, self.key),
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'User-Agent': '%s:%s' % (socket.getfqdn(), identifier)
