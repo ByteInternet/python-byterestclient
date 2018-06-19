@@ -1,3 +1,9 @@
+python-byterestclient (20180619.1600) xenial; urgency=medium
+
+  * git-buildpackage -> gbp buildpackage
+
+ -- Thomas Brockmeier <thomas.brockmeier@byte.nl>  Tue, 19 Jun 2018 16:00:54 +0200
+
 python-byterestclient (20180619.1005) xenial; urgency=medium
 
   * UNRELEASED
