@@ -1,3 +1,9 @@
+python-byterestclient (20180619.1005) xenial; urgency=medium
+
+  * UNRELEASED
+
+ -- Thomas Brockmeier <thomas@thomas-Vostro-470>  Tue, 19 Jun 2018 10:05:35 +0200
+
 python-byterestclient (20180619.1003) xenial; urgency=medium
 
   * do not parse json without content
