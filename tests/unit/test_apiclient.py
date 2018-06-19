@@ -244,3 +244,19 @@ class TestByteRESTClient(TestCase):
         client = ByteRESTClient(endpoint="http://henk:pass@aap.nl:8080/mies/")
         absolute_url = client.format_absolute_url("/henk;zus?aap=noot#noot")
         self.assertEqual(absolute_url, "http://henk:pass@aap.nl:8080/mies/henk;zus?aap=noot#noot")
+
+    def test_handles_200_response_with_empty_body(self):
+        self.mock_response._content = ''
+        client = ByteRESTClient()
+
+        response = client.get('http://henk.nl')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_handles_200_response_without_body(self):
+        self.mock_response._content = None
+        client = ByteRESTClient()
+
+        response = client.get('http://henk.nl')
+
+        self.assertEqual(response.status_code, 200)
