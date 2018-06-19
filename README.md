@@ -12,10 +12,12 @@ Building
 
 3. Upload to the Byte repo
 
-.. code:: bash
+```bash
     dput --unchecked -c /etc/byte.cf wheezy ../CHANGESFILE
+```
 
 4. Upload to PyPI
 
-.. code:: bash
+```bash
     twine upload -r pypitest dist/*
+```
