@@ -58,6 +58,9 @@ class ByteRESTClient(object):
         if response.status_code == 204:
             return None
 
+        if not response.content:
+            return response
+
         # support 0.12.1 that has json as property, newer requests has json as method
         if callable(response.json):
             return response.json()
