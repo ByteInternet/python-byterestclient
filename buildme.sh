@@ -18,7 +18,7 @@ git push
 git push --tags
 
 echo Building package
-git-buildpackage --git-pbuilder --git-dist=wheezy --git-arch=amd64 --git-ignore-branch
+gbp buildpackage --git-pbuilder --git-dist=wheezy --git-arch=amd64 --git-ignore-branch
 
 # build for pypi
 python setup.py sdist bdist_wheel
