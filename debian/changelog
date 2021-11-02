@@ -1,3 +1,13 @@
+python-byterestclient (20211102.1045) focal; urgency=medium
+
+  [ Vincent Wolsink ]
+  * Convert readme to markdown
+
+  [ Thomas Allison ]
+  * adding optional kwargs for returning Response object directly
+
+ -- Thomas <thomas@Thomas-Laptop>  Tue, 02 Nov 2021 10:45:05 +0100
+
 python-byterestclient (20180619.1600) xenial; urgency=medium
 
   * git-buildpackage -> gbp buildpackage
