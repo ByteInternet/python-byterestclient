@@ -47,6 +47,9 @@ class ByteRESTClient(object):
             **kwargs
         )
 
+        if kwargs.pop('return_response_object', False):
+            return response
+
         response.raise_for_status()
 
         if 300 <= response.status_code < 400:

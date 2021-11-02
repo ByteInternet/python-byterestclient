@@ -110,6 +110,34 @@ class TestByteRESTClient(TestCase):
             allow_redirects=False
         )
 
+    def test_restclient_request_returns_response_object_if_return_response_object_kwarg_is_true(self):
+        client = ByteRESTClient()
+        ret = client.request('get', '/varnish/v2/config/henkslaaf.nl', return_response_object=True)
+        self.assertEqual(ret, self.mock_get.return_value)
+
+    def test_restclient_request_does_not_call_raise_for_status_if_return_response_object_kwarg_is_true(self):
+        client = ByteRESTClient()
+        client.request('get', '/varnish/v2/config/henkslaaf.nl', return_response_object=True)
+        self.mock_get.raise_for_status.assert_not_called()
+
+    def test_restclient_request_does_not_call_raise_for_status_if_return_response_object_kwarg_is_false(self):
+        mock_response = mock.Mock(status_code=200)
+        self.mock_get.return_value = mock_response
+
+        client = ByteRESTClient()
+        client.request('get', '/varnish/v2/config/henkslaaf.nl', return_response_object=False)
+
+        mock_response.raise_for_status.assert_called_once()
+
+    def test_restclient_request_does_not_call_raise_for_status_if_return_response_object_kwarg_is_absent(self):
+        mock_response = mock.Mock(status_code=200)
+        self.mock_get.return_value = mock_response
+
+        client = ByteRESTClient()
+        client.request('get', '/varnish/v2/config/henkslaaf.nl')
+
+        mock_response.raise_for_status.assert_called_once()
+
     def test_restclient_request_returns_decoded_json_response(self):
         client = ByteRESTClient()
         ret = client.request('get', '/get/', data={"a": "b"})
