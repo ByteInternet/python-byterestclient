@@ -1,3 +1,10 @@
+python-byterestclient (20211103.1654) focal; urgency=medium
+
+  [ Thomas Allison ]
+  * pop `return_response_object` from kwags before passing to request
+
+ -- Thomas <thomas@Thomas-Laptop>  Wed, 03 Nov 2021 16:54:38 +0100
+
 python-byterestclient (20211102.1045) focal; urgency=medium
 
   [ Vincent Wolsink ]

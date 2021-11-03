@@ -6,7 +6,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='python-byterestclient',
-    version='20211102.1045',
+    version='20211103.1654',
     url='https://github.com/ByteInternet/python-byterestclient',
     author='Byte B.V.',
     author_email='tech@byte.nl',
