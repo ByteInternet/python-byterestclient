@@ -35,6 +35,7 @@ class ByteRESTClient(object):
             self.headers.update(headers)
 
     def request(self, method, path, data=None, *args, **kwargs):
+        return_response_object = kwargs.pop('return_response_object', False)
         url = self.format_absolute_url(path)
         request_method = getattr(requests, method)
 
@@ -47,7 +48,7 @@ class ByteRESTClient(object):
             **kwargs
         )
 
-        if kwargs.pop('return_response_object', False):
+        if return_response_object:
             return response
 
         response.raise_for_status()
