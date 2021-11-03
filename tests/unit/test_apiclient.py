@@ -115,6 +115,13 @@ class TestByteRESTClient(TestCase):
         ret = client.request('get', '/varnish/v2/config/henkslaaf.nl', return_response_object=True)
         self.assertEqual(ret, self.mock_get.return_value)
 
+    def test_restclient_request_does_not_call_request_with_response_object_kwarg(self):
+        client = ByteRESTClient()
+        client.request('get', '/varnish/v2/config/henkslaaf.nl', return_response_object=True)
+
+        args, kwargs = self.mock_get.call_args
+        self.assertNotIn('return_response_object', kwargs.keys())
+
     def test_restclient_request_does_not_call_raise_for_status_if_return_response_object_kwarg_is_true(self):
         client = ByteRESTClient()
         client.request('get', '/varnish/v2/config/henkslaaf.nl', return_response_object=True)
