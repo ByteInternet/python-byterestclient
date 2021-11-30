@@ -1,3 +1,10 @@
+python-byterestclient (20211130.1427) groovy; urgency=medium
+
+  [ Nick de Dycker ]
+  * Add `preprocess_data` function to ByteRESTClient to process data so it's easy to overwrite.
+
+ -- Nick <nick@nick-desktop>  Tue, 30 Nov 2021 14:27:51 +0100
+
 python-byterestclient (20211103.1654) focal; urgency=medium
 
   [ Thomas Allison ]
