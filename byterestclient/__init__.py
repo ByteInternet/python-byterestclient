@@ -34,14 +34,18 @@ class ByteRESTClient(object):
         if headers:
             self.headers.update(headers)
 
+    def preprocess_data(self, data):
+        return json.dumps(data or {})
+
     def request(self, method, path, data=None, *args, **kwargs):
         return_response_object = kwargs.pop('return_response_object', False)
         url = self.format_absolute_url(path)
         request_method = getattr(requests, method)
 
+        request_data = self.preprocess_data(data)
         response = request_method(
             url,
-            data=json.dumps(data or {}),
+            data=request_data,
             headers=self.headers,
             allow_redirects=False,
             *args,

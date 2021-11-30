@@ -295,3 +295,28 @@ class TestByteRESTClient(TestCase):
         response = client.get('http://henk.nl')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_restclient_request_makes_correct_call_using_preprocess_data(self):
+        self.preprocess_data = self._set_up_patch('byterestclient.ByteRESTClient.preprocess_data')
+
+        client = ByteRESTClient()
+        client.request('get', '/', data={"a": "b"})
+        self.mock_get.assert_called_once_with(
+            REST_CLIENT_ENDPOINT + "/",
+            data=self.preprocess_data.return_value,
+            headers=client.headers,
+            allow_redirects=False
+        )
+
+    def test_calls_preprocess_data_correctly(self):
+        self.preprocess_data = self._set_up_patch('byterestclient.ByteRESTClient.preprocess_data')
+
+        client = ByteRESTClient()
+        client.request('get', '/', data={"a": "b"})
+        self.preprocess_data.assert_called_once_with({'a': 'b'})
+
+    def test_preprocess_data_returns_json_dumped_data(self):
+        client = ByteRESTClient()
+        data = client.preprocess_data({"a": "b"})
+
+        self.assertEqual(data, json.dumps({"a": "b"}))
